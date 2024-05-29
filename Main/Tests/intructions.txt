@@ -1,0 +1,6 @@
+#for each record edge points 
+
+for image1 : record egde points and their coordinates and save them to directory
+for image 2: do the same 
+
+so when merging images i can do a function to say if edge points 1 touch edges points 2 get a let me know .

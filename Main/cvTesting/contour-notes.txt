@@ -1,0 +1,2 @@
+- added external lighting to illuminate all 4 edges of the pcb pads
+- 
