@@ -15,6 +15,13 @@ cap_left.start()
 import triangulation as tri
 import imageprocessor as calibration
 
+
+# Stereo vision setup parameters
+frame_rate = 120    #Camera frame rate (maximum at 120 fps)
+B = 6               #Distance between the cameras [cm]
+f = 2.6             #Camera lense's focal length [mm]
+alpha = 73        #Camera field of view in the horisontal plane [degrees]
+
 # Main program loop with depth-based object detection and tracking
 while True:
     frame_right = cap_right.capture_array()
@@ -42,7 +49,7 @@ while True:
 
         # Detect objects based on depth changes
         threshold_depth_change = 10  # Example threshold for depth change detection in mm
-        depth_difference = depth - reference_depth  # Calculate depth difference (refe depth)
+        depth_difference = depth - 50  # Calculate depth difference (refe depth is 50 cm )
         objects = np.where(np.abs(depth_difference) > threshold_depth_change, 255, 0).astype(np.uint8)
 
         # Track objects
