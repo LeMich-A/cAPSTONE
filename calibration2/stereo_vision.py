@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from picamera2 import Picamera2
 
 # Function for stereo vision and depth estimation
-
+import disparitymap as dismap
 import triangulation as tri
 import imageprocessor as calibration
 
@@ -51,7 +51,8 @@ with mp_facedetector.FaceDetection(min_detection_confidence=0.7) as face_detecti
         frame_right, frame_left = calibration.undistortRectify(frame_right, frame_left)
 
     ########################################################################################
-
+        
+        
         # If cannot catch any frame, break
         if frame_right is None or frame_left is None:                    
             break
@@ -119,6 +120,8 @@ with mp_facedetector.FaceDetection(min_detection_confidence=0.7) as face_detecti
                 # Function to calculate depth of object. Outputs vector of all depths in case of several balls.
                 # All formulas used to find depth is in video presentaion
                 depth = tri.find_depth(center_point_right, center_point_left, frame_right, frame_left, B, f, alpha)
+                disparitymap = dismap.compute_disparity_map(frame_left, frame_right)
+                depthmap = dismap.find_depth_map(disparitymap, B , alpha)
 
                 cv2.putText(frame_right, "Distance: " + str(round(depth,1)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0,255,0),3)
                 cv2.putText(frame_left, "Distance: " + str(round(depth,1)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0,255,0),3)
@@ -142,6 +145,13 @@ with mp_facedetector.FaceDetection(min_detection_confidence=0.7) as face_detecti
             frame_left= cv2.cvtColor(frame_left,cv2.COLOR_BGR2RGB)
             cv2.imshow("frame right",frame_right )
             cv2.imshow("frame left", frame_left)
+            depth_map_normalized = cv2.normalize(depthmap, None, 0, 255, cv2.NORM_MINMAX)
+            depth_map_normalized = np.uint8(depth_map_normalized)
+
+# Display the depth map using OpenCV
+            cv2.imshow('Depth Map', depth_map_normalized)
+            
+
 
 
             # Hit "q" to close the window
