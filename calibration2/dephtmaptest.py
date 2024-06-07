@@ -37,10 +37,22 @@ while True:
     
     # Compute the depth map
     depthmap = ShowDisparity(imgLeft, imgRight, 5)
+
+    # Generating thresholded GS image
+    ret,thresh = cv2.threshold(depthmap,127,255,0)
+    
+    # Detecting contours in thresholded image
+    im2,contours,heiarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    
+    # Creating bounding box around contours
+    rect = cv2.minAreaRect(contours)
+    box = np.int0(cv2.boxPoints(rect))
     
     # Display the depth map
-    cv2.imshow("depthmap", depthmap)
+    #cv2.imshow("depthmap", depthmap)
     
+    #display bounding box 
+    cv2.drawContours(depthmap,[box],0,(0,0,255),2)
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
