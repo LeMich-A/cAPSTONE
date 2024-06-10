@@ -4,6 +4,7 @@ import numpy as np
 from picamera2 import Picamera2
 import time
 import disparitymap as dismap
+import triangulation as tri
 import imageprocessor as calibration
 
 # Open both cameras
@@ -47,6 +48,8 @@ def obstacle_avoid(depthmap, depth_thresh, output_canvas):
 
 
 
+x_right = right_point[0]
+x_left = left_point[0]
 
 # Stereo vision setup parameters
 B = 6  # Distance between the cameras [cm]
@@ -73,7 +76,7 @@ while True:
     # Example usage of depth estimation with triangulation
     right_point = (100, 200)  # Example right camera point
     left_point = (150, 200)   # Example left camera point
-    depth = find_depth(right_point, left_point, frame_rightGray, frame_leftGray, B, f, alpha)
+    depth = tri.find_depth(right_point, left_point, frame_rightGray, frame_leftGray, B, f, alpha)
     print("Depth:", depth)
 
     # Perform obstacle avoidance
